@@ -30,22 +30,21 @@ const fs = require("fs");
 
 // тут мы получаем "запрос" из командной строки
 const query = process.argv[2];
+
 let cities = {};
 
 // Чтение городов в переменную, запись в переменную производится в Callback-функции
+
 fs.readFile(LIST_OF_CITIES, "utf8", (err, data) => {
     cities = data;
     cities = JSON.parse(cities);    
-    //** вот где то тут пишите логику */         
-	console.log(query);
+    //** вот где то тут пишите логику */ 
     processingQuery(query);
 });
 function processingQuery(str) {
     let regForString = /\s/;
     let strToArray = str.split(regForString);
-    console.log(strToArray);
     if (strToArray.length == 1) {
-        console.log(111);
         const regForFirstParam = /all|first|second|last|\d/;
         if (regForFirstParam.test(strToArray[0])) {
             NumberOfCitiesForReturn(cities, strToArray, writeFile);         
@@ -59,21 +58,19 @@ function processingQuery(str) {
     else if (strToArray.length == 3) {
         const regForWhere = /where/;
         if (regForWhere.test(strToArray[1])) {
-            const regForLimit = /(%number%[<>=]\d+$)|([%city%|%region%]=[а-яА-Я-]+$)/;
+            const regForLimit = /(%number%[<>=]\d+$)|([%city%|%region%]=[а-яА-Я-.]+$)/;
             if (regForLimit.test(strToArray[2])) {
                 strToArray[2]= strToArray[2].replace(/%/g,' ').trim();
-                
-                console.log(strToArray[2]);
-                //функция 1 с коллбэком на функцию 2 
                 CitiesAfterParam(cities, strToArray, NumberOfCitiesForReturn);
             } else {
                 console.log('Вы неправильно ввели параметр');  
             }
         } else {
-            console.log('Вы неправильно ввели параметрЖ он обязательно должен начинаться с ключевого слова where');  
+            console.log('Вы неправильно ввели параметр: он обязательно должен начинаться с ключевого слова where');  
         }
     }
 }
+
 function CitiesAfterParam(arrResult, arrLimit, callback) {
     let limit = arrLimit[2];
     limit.split(/\s/);
@@ -121,12 +118,13 @@ function NumberOfCitiesForReturn(arr, arrLimit, callback) {
         arrResult = arr[arr.length - 1];
     }
     callback(arrResult);
+    console.log(arrResult);
 }
 function writeFile(data) {
     return new Promise ( (res, rej) => {
         fs.writeFile(RESULT, JSON.stringify(data), 'utf8', (err) => {
 			if(err) {rej(error);}
-			else {res(data); console.log("write-replace");}
+			else {res(data);}
     });
 });
 }
