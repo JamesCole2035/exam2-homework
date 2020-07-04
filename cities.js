@@ -49,11 +49,11 @@ function processingQuery(str) {
         if (regForFirstParam.test(strToArray[0])) {
             NumberOfCitiesForReturn(cities, strToArray, writeFile);         
         } else {
-            console.log('Вы неправильно ввели условие');            
+            throw new Error("Вы неправильно ввели условие");            
         } 
     } 
     else if (strToArray.length == 2) {
-        console.log('Вы неправильно ввели условие и параметр');       
+        throw new Error('Вы неправильно ввели условие и параметр');       
     } 
     else if (strToArray.length == 3) {
         const regForWhere = /where/;
@@ -63,10 +63,10 @@ function processingQuery(str) {
                 strToArray[2]= strToArray[2].replace(/%/g,' ').trim();
                 CitiesAfterParam(cities, strToArray, NumberOfCitiesForReturn);
             } else {
-                console.log('Вы неправильно ввели параметр');  
+                throw new Error('Вы неправильно ввели параметр');  
             }
         } else {
-            console.log('Вы неправильно ввели параметр: он обязательно должен начинаться с ключевого слова where');  
+            throw new Error('Вы неправильно ввели параметр: он обязательно должен начинаться с ключевого слова where');  
         }
     }
 }
